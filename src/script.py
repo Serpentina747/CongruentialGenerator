@@ -10,12 +10,16 @@ import string
 alphabet_string = string.ascii_lowercase
 alphabet_list = list(alphabet_string)
 
+alphabet_string_up = string.ascii_uppercase
+alphabet_list_up = list(alphabet_string_up)
+
+
 def encriptar_linia(linia, a, c):
 
     print(linia)
     for caracter in range(0, len(linia)):
         print(linia[caracter])
-        
+        print(alphabet_list.index(linia[caracter]))
     return " "
 
 
