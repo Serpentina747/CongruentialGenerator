@@ -16,11 +16,19 @@ alphabet_list_up = list(alphabet_string_up)
 
 def encriptar_linia(linia, a, c):
 
-    print(linia)
+    linia_encriptada = ""
+    # print(linia)
     for caracter in range(0, len(linia)):
-        print(linia[caracter])
-        print(alphabet_list.index(linia[caracter]))
-    return " "
+        # print(linia[caracter])
+        if(linia[caracter].isupper()):
+            resultat = ((a + alphabet_list_up.index(linia[caracter])) * c) % 26
+            linia_encriptada = linia_encriptada + alphabet_list_up[resultat]
+        elif(linia[caracter].islower()):
+            resultat = ((a + alphabet_list.index(linia[caracter])) * c) % 26
+            linia_encriptada = linia_encriptada + alphabet_list[resultat]
+        else:
+            linia_encriptada = linia_encriptada + linia[caracter]
+    return linia_encriptada
 
 
 
@@ -43,10 +51,14 @@ def main():
     fitxer = open(ruta, 'r')
     linies = fitxer.readlines()
 
-    print(linies)
+    # print(linies)
     
     for linia in linies:
+        print(linia)
+
+    for linia in linies:
         linia_encriptada = encriptar_linia(linia, a, c)
+        print(linia_encriptada)
 
 if __name__ == '__main__':
     main()
