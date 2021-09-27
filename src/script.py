@@ -84,7 +84,7 @@ def main():
     a = 2 # a = input("Coeficient a: ")
     c = 3 # c = input("Coeficient c: ")
     # s = input("Llavor s: ")
-    nomFitxer = "fitxer2.txt" #input("Nom fitxer: ")
+    nomFitxer = "fitxer3.txt" #input("Nom fitxer: ")
     nomFitxer_xifrat = "fitxer_xifrat.txt"
     nomFitxer_desxifrat = "fitxer_desxifrat.txt"
 
