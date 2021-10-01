@@ -16,6 +16,10 @@ alphabet_list = list(alphabet_string)
 
 alphabet_string_up = string.ascii_uppercase
 alphabet_list_up = list(alphabet_string_up)
+
+n_caracters_text_normal = 0 # Quantitat de caràcters del text normal
+n_caracters_text_encriptat = 0 # Quantitat de caràcters del text encriptat
+
 # Elimina tots els accents de el text entrat i retorna una cadena de caràcters amb el text processat
 def normalitzar(text):
     try:
@@ -34,11 +38,11 @@ def encriptar_linia(linia, a, c):
     for caracter in range(0, len(linia)):
         if(linia[caracter].isupper()):
             caracter_normal = normalitzar(linia[caracter])
-            resultat = ((a + alphabet_list_up.index(caracter_normal)) * c) % 26
+            resultat = ((a * alphabet_list_up.index(caracter_normal)) + c) % 26
             linia_encriptada = linia_encriptada + alphabet_list_up[resultat]
         elif(linia[caracter].islower()):
             caracter_normal = normalitzar(linia[caracter])
-            resultat = ((a + alphabet_list.index(caracter_normal)) * c) % 26
+            resultat = ((a * alphabet_list.index(caracter_normal)) + c) % 26
             linia_encriptada = linia_encriptada + alphabet_list[resultat]
         else:
             linia_encriptada = linia_encriptada + linia[caracter]
@@ -46,14 +50,18 @@ def encriptar_linia(linia, a, c):
 
 # Funció que desencripta una línia i la retorna en forma de cadena de caràcters
 def desencriptar_linia(linia, a, c):
-
     linia_desencriptada = ""
     for caracter in range(0, len(linia)):
         if(linia[caracter].isupper()):
-            resultat = ((alphabet_list_up.index(linia[caracter]) / c) - a) % 26
+            print("Majúscules: ", alphabet_list_up.index(linia[caracter]))
+            resultat_mod_invers = pow(alphabet_list_up.index(linia[caracter]), -1, 26)
+            resultat = int((resultat_mod_invers - c) / a)
             linia_desencriptada = linia_desencriptada + alphabet_list_up[resultat]
         elif(linia[caracter].islower()):
-            resultat = ((alphabet_list.index(linia[caracter]) / c) / - a) % 26
+            print("Minúscules: ", alphabet_list.index(linia[caracter]))
+            resultat_mod_invers = pow(alphabet_list.index(linia[caracter]), -1, 26)
+            print(resultat_mod_invers)
+            resultat = int((resultat_mod_invers - c) / a)
             linia_desencriptada = linia_desencriptada + alphabet_list[resultat]
         else:
             linia_desencriptada = linia_desencriptada + linia[caracter]
@@ -74,6 +82,38 @@ def normalitzar_linia(linia):
     return linia_normalitzada
 
 
+def generar_sequencia(a,c,s):
+    llista_enters = []
+    llista_enters.append(s)
+    existeix_repetit = False
+    x = s
+    while not existeix_repetit:
+        resultat = ((a * x) + c) % 26
+        if resultat in llista_enters:
+            existeix_repetit = True
+            break
+        llista_enters.append(resultat)
+        x = resultat
+
+    print(llista_enters)
+    print("Periode: ", len(llista_enters))
+
+# Funció que compta els caràcters que no són ni comes, ni punts, ni cometes ni espais en blanc
+def comptar_lletres(linies, textNormal):
+    global n_caracters_text_normal
+    global n_caracters_text_encriptat
+    for linia in linies:
+        for caracter in range(0, len(linia)):
+            if(linia[caracter].isupper()):
+                if (textNormal):
+                    n_caracters_text_normal = n_caracters_text_normal + 1
+                else:
+                    n_caracters_text_encriptat = n_caracters_text_encriptat + 1
+            elif(linia[caracter].islower()):
+                if (textNormal):
+                    n_caracters_text_normal = n_caracters_text_normal + 1
+                else:
+                    n_caracters_text_encriptat = n_caracters_text_encriptat + 1
 # Funció principal
 def main():
 
@@ -81,15 +121,21 @@ def main():
     # Llegim l'input de l'usuari
 
     a = 2 # a = input("Coeficient a: ")
-    c = 3 # c = input("Coeficient c: ")
-    # s = input("Llavor s: ")
-    nomFitxer = "fitxer2.txt" #input("Nom fitxer: ")
+    c = 6 # c = input("Coeficient c: ")
+    
+    s = int(input("Llavor s: "))
+
+    nomFitxer = "fitxer1.txt" #input("Nom fitxer: ")
     nomFitxer_xifrat = "fitxer_xifrat.txt"
     nomFitxer_desxifrat = "fitxer_desxifrat.txt"
 
     ruta_xifrat = ruta + nomFitxer_xifrat
     ruta_desxifrat = ruta + nomFitxer_desxifrat
     ruta = ruta + nomFitxer
+
+    # Generem la seqüència de valors enters amb el generador congruencial (ax+c mod L) a partir de la llavor 's', indiquem també el període de la seqüència
+    generar_sequencia(a,c,s)
+
 
     if not os.path.isfile(ruta):
         print("El fitxer no existeix")
@@ -102,27 +148,40 @@ def main():
 
     fn = open('normalitzat.txt', 'w')
 
+    # Comptem les línies del text sense normalitzar ni encriptar
+    comptar_lletres(linies, True)
+
     for linia in linies:
         linia_normal = normalitzar_linia(linia)
         fn.write(linia_normal)
 
+    print("Nombre totals de caràcters del text normal: ", n_caracters_text_normal)
     # Encriptem el text normal del fitxer i el disposem dins d'un segon fitxer
     for linia in linies:
         linia_encriptada = encriptar_linia(linia, a, c)
         fitxer_xifrat.write(linia_encriptada)
+
+
+    fitxer_xifrat.close()
+
 
     fitxer_desxifrar = open(ruta_xifrat, 'r')
     fitxer_desxifrat = open(ruta_desxifrat, 'w')
 
     linies_xifrades = fitxer_desxifrar.readlines()
 
+    # Comptem les línies del text encriptat
+    comptar_lletres(linies_xifrades, False)
+    print("Nombre totals de caràcters del text encriptat: ", n_caracters_text_encriptat)
     # Desencriptem
-        # linia_encriptada = desencriptar_linia(linia, a, c)
-        # fitxer_desxifrat.write(linia_encriptada)
+    #for linia_encriptada in linies_xifrades:
+        #print(linia_encriptada)
+        #linia_desencriptada = desencriptar_linia(linia_encriptada, a, c)
+        #fitxer_desxifrat.write(linia_desencriptada)
 
+    
 
     fitxer.close()
-    fitxer_xifrat.close()
     fitxer_desxifrar.close()
     fitxer_desxifrat.close()
     fn.close()
