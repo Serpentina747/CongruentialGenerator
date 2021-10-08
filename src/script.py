@@ -151,23 +151,27 @@ def calcular_index(res, TextNormal):
     for lletres in alphabet_list:
         n_parells_iguals = n_parells_iguals + (res[lletres] * (res[lletres]-1))
     
-    if(TextNormal): return (len(res)*(n_parells_iguals))/((n_caracters_text_normal)*(n_caracters_text_normal-1))
-    else: return (len(res)*(n_parells_iguals))/((n_caracters_text_encriptat)*(n_caracters_text_encriptat-1))
+    if(TextNormal): return (26*(n_parells_iguals))/((n_caracters_text_normal)*(n_caracters_text_normal-1))
+    else: return (26*(n_parells_iguals))/((n_caracters_text_encriptat)*(n_caracters_text_encriptat-1))
         
 # Funció principal
 def main():
 
     ruta = ".\\data\\"
-    # Llegim l'input de l'usuari
 
-    a = 1 # a = input("Coeficient a: ") 
-    c = 3 # c = input("Coeficient c: ") # Un nombre que ha de ser coprimer amb 26: 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25... 
-    
+    # Llegim l'input de l'usuari
+    a = int(input("Coeficient a: ")) 
+    c = int(input("Coeficient c: ")) # Un nombre que ha de ser coprimer amb 26: 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25... 
     s = int(input("Llavor s: "))
 
-    nomFitxer = "fitxer1.txt" #input("Nom fitxer: ")
-    nomFitxer_xifrat = "fitxer_xifrat.txt"
-    nomFitxer_desxifrat = "fitxer_desxifrat.txt"
+    # Organitzem els noms dels fitxers
+    nomFitxer = input("Nom fitxer: ")
+    nomFitxer_xifrat = nomFitxer + "_xifrat"
+    nomFitxer_desxifrat = nomFitxer + "_desxifrat"
+
+    nomFitxer = nomFitxer + ".txt"
+    nomFitxer_xifrat = nomFitxer_xifrat + ".txt"
+    nomFitxer_desxifrat = nomFitxer_desxifrat + ".txt"
 
     ruta_xifrat = ruta + nomFitxer_xifrat
     ruta_desxifrat = ruta + nomFitxer_desxifrat
@@ -220,6 +224,7 @@ def main():
     index_text_encriptat = calcular_index(res2, False)
 
 
+    # Imprimim els valors de la taula de freqüències de caràcters i els índexs de coincidències
     print("Taula de freqüència del text normal: ", res1)
     print("Index coincidencia text normal: ", index_text_normal)
     print("Taula de freqüència del text desencriptat: ", res2)
